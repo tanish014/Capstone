@@ -1,0 +1,125 @@
+/* ─── File Upload ─── */
+.file-upload {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    padding: 12px;
+    gap: 12px;
+}
+
+.upload-area {
+    width: 100%;
+}
+
+.upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 20px;
+    border: 2px dashed var(--border);
+    border-radius: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+}
+
+.upload-label:hover {
+    border-color: var(--accent);
+    color: var(--accent);
+    background: var(--glass);
+}
+
+.upload-label.uploading {
+    cursor: wait;
+    opacity: 0.6;
+}
+
+.upload-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+}
+
+.upload-label span:not(.upload-hint) {
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.upload-spinner {
+    width: 24px;
+    height: 24px;
+    border: 2px solid var(--border);
+    border-top-color: var(--accent);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+}
+
+.upload-error {
+    font-size: 12px;
+    color: var(--danger);
+    padding: 8px;
+    background: rgba(239, 68, 68, 0.1);
+    border-radius: 8px;
+    text-align: center;
+}
+
+/* ─── File List ─── */
+.files-list {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.no-files {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 13px;
+    padding: 20px;
+}
+
+.file-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 12px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.2s;
+}
+
+.file-item:hover {
+    background: var(--glass-hover);
+    border-color: var(--accent-glow);
+}
+
+.file-icon {
+    color: var(--accent);
+    flex-shrink: 0;
+}
+
+.file-details {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+
+.file-name {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-primary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file-meta {
+    font-size: 11px;
+    color: var(--text-muted);
+}

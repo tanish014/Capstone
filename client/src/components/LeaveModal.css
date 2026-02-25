@@ -1,0 +1,90 @@
+/* ─── Leave Modal ─── */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(8px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.modal-card {
+    background: var(--bg-card);
+    backdrop-filter: blur(24px);
+    border: 1px solid var(--border);
+    border-radius: 20px;
+    padding: 32px;
+    max-width: 400px;
+    width: 90%;
+    text-align: center;
+    box-shadow: var(--shadow);
+    animation: fadeIn 0.3s ease-out;
+}
+
+.modal-icon {
+    color: var(--warning);
+    margin-bottom: 16px;
+}
+
+.modal-card h2 {
+    font-size: 20px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: var(--text-primary);
+}
+
+.modal-card p {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 24px;
+}
+
+.modal-actions {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.modal-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.modal-btn.save-btn {
+    background: linear-gradient(135deg, var(--accent), #a78bfa);
+    color: white;
+}
+
+.modal-btn.save-btn:hover {
+    box-shadow: 0 4px 16px var(--accent-glow);
+}
+
+.modal-btn.leave-btn {
+    background: rgba(239, 68, 68, 0.1);
+    color: var(--danger);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.modal-btn.leave-btn:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.modal-btn.cancel-btn {
+    background: var(--glass);
+    color: var(--text-secondary);
+    border: 1px solid var(--border);
+}
+
+.modal-btn.cancel-btn:hover {
+    background: var(--glass-hover);
+}

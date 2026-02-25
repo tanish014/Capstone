@@ -1,0 +1,29 @@
+/* ─── Theme Toggle ─── */
+.theme-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.theme-toggle:hover {
+    background: var(--glass-hover);
+    color: var(--text-primary);
+}
+
+.theme-toggle svg {
+    transition: transform 0.3s;
+}
+
+.theme-toggle:hover svg {
+    transform: rotate(20deg);
+}

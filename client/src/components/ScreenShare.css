@@ -1,0 +1,68 @@
+/* ─── Screen Share ─── */
+.screen-share {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.screen-share-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 16px;
+    background: var(--glass);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    border-radius: 10px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.screen-share-btn:hover {
+    background: var(--glass-hover);
+    color: var(--text-primary);
+}
+
+.screen-share-btn.sharing {
+    background: rgba(239, 68, 68, 0.1);
+    border-color: rgba(239, 68, 68, 0.3);
+    color: var(--danger);
+}
+
+.screen-share-btn.sharing:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+.screen-preview {
+    position: fixed;
+    bottom: 60px;
+    left: 20px;
+    width: 240px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--accent);
+    z-index: 30;
+}
+
+.preview-video,
+.remote-video {
+    width: 100%;
+    display: block;
+    border-radius: 10px;
+}
+
+.remote-screen {
+    position: fixed;
+    bottom: 60px;
+    right: 340px;
+    width: 320px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    border: 2px solid var(--success);
+    z-index: 30;
+}

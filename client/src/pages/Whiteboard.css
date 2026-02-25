@@ -1,0 +1,251 @@
+/* ─── Whiteboard Page Layout ─── */
+.whiteboard-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+    background: var(--bg-primary);
+    overflow: hidden;
+}
+
+/* ─── Header ─── */
+.wb-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    z-index: 20;
+    min-height: 52px;
+}
+
+.wb-header-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.room-badge {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--glass);
+    padding: 6px 12px;
+    border-radius: 10px;
+    border: 1px solid var(--border);
+}
+
+.room-label {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: var(--text-muted);
+    font-weight: 600;
+}
+
+.room-id {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--accent);
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    letter-spacing: 1px;
+}
+
+.btn-copy {
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 4px;
+    border-radius: 6px;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.btn-copy:hover {
+    color: var(--accent);
+    background: var(--glass-hover);
+}
+
+.participant-badge {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text-secondary);
+    padding: 6px 10px;
+    background: var(--glass);
+    border-radius: 8px;
+}
+
+.host-badge {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--warning);
+    background: rgba(251, 191, 36, 0.1);
+    padding: 4px 10px;
+    border-radius: 6px;
+    border: 1px solid rgba(251, 191, 36, 0.2);
+}
+
+.wb-header-right {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.btn-save {
+    background: var(--glass);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    padding: 8px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+}
+
+.btn-save:hover {
+    background: var(--glass-hover);
+    color: var(--accent);
+}
+
+.btn-leave {
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    color: var(--danger);
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+}
+
+.btn-leave:hover {
+    background: rgba(239, 68, 68, 0.2);
+}
+
+/* ─── Body (Toolbar + Canvas + Sidebar) ─── */
+.wb-body {
+    display: flex;
+    flex: 1;
+    overflow: hidden;
+}
+
+/* ─── Canvas Area ─── */
+.wb-canvas-area {
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    background: #1a1a2e;
+}
+
+[data-theme="light"] .wb-canvas-area {
+    background: #f0f0f5;
+}
+
+/* ─── Right Sidebar ─── */
+.wb-right-sidebar {
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border-left: 1px solid var(--border);
+}
+
+.sidebar-tabs {
+    display: flex;
+    border-bottom: 1px solid var(--border);
+}
+
+.sidebar-tab {
+    flex: 1;
+    padding: 12px;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+    position: relative;
+}
+
+.sidebar-tab.active {
+    color: var(--accent);
+}
+
+.sidebar-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--accent);
+    border-radius: 2px 2px 0 0;
+}
+
+.sidebar-tab:hover:not(.active) {
+    color: var(--text-secondary);
+    background: var(--glass);
+}
+
+.sidebar-content {
+    flex: 1;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+/* ─── Footer ─── */
+.wb-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 8px 16px;
+    background: var(--bg-card);
+    backdrop-filter: blur(20px);
+    border-top: 1px solid var(--border);
+    z-index: 20;
+    min-height: 48px;
+}
+
+/* ─── Responsive ─── */
+@media (max-width: 900px) {
+    .wb-right-sidebar {
+        width: 260px;
+    }
+}
+
+@media (max-width: 768px) {
+    .wb-body {
+        flex-direction: column;
+    }
+
+    .wb-right-sidebar {
+        width: 100%;
+        max-height: 250px;
+    }
+
+    .room-label {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .wb-header {
+        padding: 6px 10px;
+    }
+
+    .participant-badge span {
+        display: none;
+    }
+}
