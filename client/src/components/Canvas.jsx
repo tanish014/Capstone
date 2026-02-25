@@ -10,6 +10,7 @@ const Canvas = forwardRef(({ tool, color, brushSize, roomId, socket, emit, on, o
     const [currentStroke, setCurrentStroke] = useState([]);
     const [redoStack, setRedoStack] = useState([]);
     const throttleTimer = useRef(null);
+    const pointsBuffer = useRef([]);
 
     // Initialize canvas
     useEffect(() => {
@@ -96,14 +97,16 @@ const Canvas = forwardRef(({ tool, color, brushSize, roomId, socket, emit, on, o
 
         const handleRemoteDraw = (data) => {
             const ctx = ctxRef.current;
-            if (!ctx) return;
+            if (!ctx || !data.points || data.points.length < 2) return;
             ctx.beginPath();
             ctx.strokeStyle = data.tool === 'eraser' ? '#1a1a2e' : data.color;
             ctx.lineWidth = data.size;
             ctx.lineCap = 'round';
             ctx.lineJoin = 'round';
-            ctx.moveTo(data.prevX, data.prevY);
-            ctx.lineTo(data.x, data.y);
+            ctx.moveTo(data.points[0].x, data.points[0].y);
+            for (let i = 1; i < data.points.length; i++) {
+                ctx.lineTo(data.points[i].x, data.points[i].y);
+            }
             ctx.stroke();
         };
 
@@ -174,6 +177,7 @@ const Canvas = forwardRef(({ tool, color, brushSize, roomId, socket, emit, on, o
         const pos = getPos(e);
         isDrawing.current = true;
         lastPoint.current = pos;
+        pointsBuffer.current = [pos];
         setCurrentStroke([pos]);
     };
 
@@ -193,19 +197,23 @@ const Canvas = forwardRef(({ tool, color, brushSize, roomId, socket, emit, on, o
         ctx.lineTo(pos.x, pos.y);
         ctx.stroke();
 
-        // Throttle socket emit (~60fps)
+        // Accumulate points in buffer
+        pointsBuffer.current.push(pos);
+
+        // Flush buffer every ~16ms (~60fps) — sends ALL accumulated points
         if (!throttleTimer.current) {
             throttleTimer.current = setTimeout(() => {
-                emit('draw', {
-                    roomId,
-                    prevX: lastPoint.current.x,
-                    prevY: lastPoint.current.y,
-                    x: pos.x,
-                    y: pos.y,
-                    color,
-                    size: brushSize,
-                    tool
-                });
+                if (pointsBuffer.current.length >= 2) {
+                    emit('draw', {
+                        roomId,
+                        points: pointsBuffer.current,
+                        color,
+                        size: brushSize,
+                        tool
+                    });
+                    // Keep the last point as the start of the next batch
+                    pointsBuffer.current = [pointsBuffer.current[pointsBuffer.current.length - 1]];
+                }
                 throttleTimer.current = null;
             }, 16);
         }
@@ -218,6 +226,22 @@ const Canvas = forwardRef(({ tool, color, brushSize, roomId, socket, emit, on, o
         if (e) e.preventDefault();
         if (!isDrawing.current) return;
         isDrawing.current = false;
+
+        // Flush any remaining buffered points
+        if (pointsBuffer.current.length >= 2) {
+            emit('draw', {
+                roomId,
+                points: pointsBuffer.current,
+                color,
+                size: brushSize,
+                tool
+            });
+        }
+        pointsBuffer.current = [];
+        if (throttleTimer.current) {
+            clearTimeout(throttleTimer.current);
+            throttleTimer.current = null;
+        }
 
         if (currentStroke.length > 0) {
             const stroke = {
