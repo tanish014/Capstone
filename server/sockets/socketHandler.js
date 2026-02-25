@@ -8,7 +8,7 @@ module.exports = function socketHandler(io) {
         console.log(`🔌 User connected: ${socket.id}`);
 
         // ─── Join Room ───
-        socket.on('join-room', ({ roomId, userId, userName }) => {
+        socket.on('join-room', async ({ roomId, userId, userName }) => {
             socket.join(roomId);
 
             // Store user info on the socket
@@ -21,6 +21,16 @@ module.exports = function socketHandler(io) {
                 roomUsers.set(roomId, new Map());
             }
             roomUsers.get(roomId).set(socket.id, { userId, userName, socketId: socket.id });
+
+            // Send existing whiteboard strokes to the joining user
+            try {
+                const session = await WhiteboardSession.findOne({ roomId });
+                if (session && session.strokes.length > 0) {
+                    socket.emit('load-strokes', session.strokes);
+                }
+            } catch (err) {
+                console.error('Error loading strokes:', err);
+            }
 
             // Broadcast to room
             socket.to(roomId).emit('user-joined', {
@@ -47,13 +57,35 @@ module.exports = function socketHandler(io) {
         });
 
         // ─── Stroke Complete (for undo/redo sync) ───
-        socket.on('stroke-complete', (data) => {
+        socket.on('stroke-complete', async (data) => {
             socket.to(data.roomId).emit('stroke-complete', data);
+
+            // Persist stroke to DB
+            try {
+                await WhiteboardSession.findOneAndUpdate(
+                    { roomId: data.roomId },
+                    { $push: { strokes: data.stroke } },
+                    { upsert: true }
+                );
+            } catch (err) {
+                console.error('Error saving stroke:', err);
+            }
         });
 
         // ─── Undo Event ───
-        socket.on('undo', (data) => {
+        socket.on('undo', async (data) => {
             socket.to(data.roomId).emit('undo', data);
+
+            // Remove last stroke from DB
+            try {
+                const session = await WhiteboardSession.findOne({ roomId: data.roomId });
+                if (session && session.strokes.length > 0) {
+                    session.strokes.pop();
+                    await session.save();
+                }
+            } catch (err) {
+                console.error('Error undoing stroke:', err);
+            }
         });
 
         // ─── Redo Event ───

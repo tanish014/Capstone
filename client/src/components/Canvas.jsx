@@ -67,6 +67,12 @@ const Canvas = forwardRef(({ tool, color, brushSize, roomId, socket, emit, on, o
         },
         getSnapshot: () => {
             return canvasRef.current.toDataURL('image/png');
+        },
+        loadStrokes: (savedStrokes) => {
+            if (savedStrokes && savedStrokes.length > 0) {
+                setStrokes(savedStrokes);
+                redrawCanvas(savedStrokes);
+            }
         }
     }));
 
@@ -146,11 +152,19 @@ const Canvas = forwardRef(({ tool, color, brushSize, roomId, socket, emit, on, o
             });
         };
 
+        const handleLoadStrokes = (savedStrokes) => {
+            const ctx = ctxRef.current;
+            if (!ctx || !savedStrokes || savedStrokes.length === 0) return;
+            setStrokes(savedStrokes);
+            redrawCanvas(savedStrokes);
+        };
+
         on('draw', handleRemoteDraw);
         on('stroke-complete', handleRemoteStrokeComplete);
         on('clear-board', handleRemoteClearBoard);
         on('undo', handleRemoteUndo);
         on('redo', handleRemoteRedo);
+        on('load-strokes', handleLoadStrokes);
 
         return () => {
             off('draw', handleRemoteDraw);
@@ -158,6 +172,7 @@ const Canvas = forwardRef(({ tool, color, brushSize, roomId, socket, emit, on, o
             off('clear-board', handleRemoteClearBoard);
             off('undo', handleRemoteUndo);
             off('redo', handleRemoteRedo);
+            off('load-strokes', handleLoadStrokes);
         };
     }, [socket.current, on, off, redrawCanvas]);
 
